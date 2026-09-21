@@ -10,6 +10,7 @@ use Illuminate\Support\Facades\RateLimiter;
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Support\Str;
 use Laravel\Fortify\Contracts\LoginResponse;
+use Laravel\Fortify\Contracts\LogoutResponse;
 use Laravel\Fortify\Fortify;
 
 class FortifyServiceProvider extends ServiceProvider
@@ -20,6 +21,7 @@ class FortifyServiceProvider extends ServiceProvider
     public function register(): void
     {
         $this->redirectLoginResponse();
+        $this->redirectLogutResponse();
     }
 
     /**
@@ -94,6 +96,17 @@ class FortifyServiceProvider extends ServiceProvider
                 }
 
                 return redirect()->route('login');
+            }
+        });
+    }
+
+    protected function redirectLogutResponse(): void
+    {
+        $this->app->instance(LogoutResponse::class, new class implements LogoutResponse
+        {
+            public function toResponse($request)
+            {
+                return redirect()->route('home');
             }
         });
     }

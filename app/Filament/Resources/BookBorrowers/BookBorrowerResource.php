@@ -11,6 +11,8 @@ use App\Filament\Resources\BookBorrowers\Schemas\BookBorrowerInfolist;
 use App\Filament\Resources\BookBorrowers\Tables\BookBorrowersTable;
 use App\Models\BookBorrower;
 use BackedEnum;
+use Filament\Pages\Enums\SubNavigationPosition;
+use Filament\Resources\Pages\Page;
 use Filament\Resources\Resource;
 use Filament\Schemas\Schema;
 use Filament\Support\Icons\Heroicon;
@@ -23,6 +25,8 @@ class BookBorrowerResource extends Resource
     protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedBookmarkSquare;
 
     protected static ?string $recordTitleAttribute = 'book_id';
+
+    protected static ?SubNavigationPosition $subNavigationPosition = SubNavigationPosition::End;
 
     protected static ?int $navigationSort = 2;
 
@@ -56,5 +60,13 @@ class BookBorrowerResource extends Resource
             'view' => ViewBookBorrower::route('/{record}'),
             'edit' => EditBookBorrower::route('/{record}/edit'),
         ];
+    }
+
+    public static function getRecordSubNavigation(Page $page): array
+    {
+        return $page->generateNavigationItems([
+            EditBookBorrower::class,
+            ViewBookBorrower::class,
+        ]);
     }
 }

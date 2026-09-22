@@ -45,6 +45,7 @@ class BooksTable
                     })
                     ->numeric(decimalPlaces: 0),
             ])
+            ->deferLoading()
             ->filters([
                 //
             ])

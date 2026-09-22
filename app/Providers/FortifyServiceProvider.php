@@ -87,7 +87,7 @@ class FortifyServiceProvider extends ServiceProvider
         {
             public function toResponse($request)
             {
-                if ($request->user()->hasRole('librarian')) {
+                if ($request->user()->hasAnyRole(['librarian', 'super_admin'])) {
                     return redirect()->intended(route('filament.admin.pages.dashboard'));
                 }
 

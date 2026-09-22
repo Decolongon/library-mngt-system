@@ -25,6 +25,7 @@ class DatabaseSeeder extends Seeder
         // ]);
         $roleLibrarian = Role::create(['name' => 'librarian']);
         $bookBorrower = Role::create(['name' => 'book_borrower']);
+         $superAdmin = Role::create(['name' => 'super_admin']);
 
        $user1 = User::create([
             'email' => 'librarian@gmail.com',
@@ -42,6 +43,13 @@ class DatabaseSeeder extends Seeder
 
         $user2->assignRole($bookBorrower);
 
+       $user3 = User::create([
+            'name' => 'Super admin',
+            'email' => 'superadmin@gmail.com',
+            'password' => bcrypt('12345678')
+        ]);
+
+        $user3->assignRole($superAdmin);
 
     }
 }

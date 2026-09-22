@@ -34,7 +34,7 @@ class AdminPanelProvider extends PanelProvider
                 'warning' => Color::Orange,
                 'success' => Color::Emerald,
                 'danger' => Color::Rose,
-                'info' => Color::Blue
+                'info' => Color::Blue,
             ])
             ->discoverResources(in: app_path('Filament/Resources'), for: 'App\Filament\Resources')
             ->discoverPages(in: app_path('Filament/Pages'), for: 'App\Filament\Pages')
@@ -46,6 +46,7 @@ class AdminPanelProvider extends PanelProvider
                 AccountWidget::class,
                 FilamentInfoWidget::class,
             ])
+            ->sidebarCollapsibleOnDesktop()
             ->resourceCreatePageRedirect('index')
             ->resourceEditPageRedirect('index')
             ->middleware([
@@ -60,8 +61,8 @@ class AdminPanelProvider extends PanelProvider
                 DispatchServingFilamentEvent::class,
             ])
             ->authMiddleware([
-                //Authenticate::class,
-                FilamentPanelMiddleware::class
+                // Authenticate::class,
+                FilamentPanelMiddleware::class,
             ]);
     }
 }

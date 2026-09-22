@@ -11,10 +11,13 @@ use App\Filament\Resources\Books\Schemas\BookInfolist;
 use App\Filament\Resources\Books\Tables\BooksTable;
 use App\Models\Book;
 use BackedEnum;
+use Filament\Pages\Enums\SubNavigationPosition;
+use Filament\Resources\Pages\Page;
 use Filament\Resources\Resource;
 use Filament\Schemas\Schema;
 use Filament\Support\Icons\Heroicon;
 use Filament\Tables\Table;
+use UnitEnum;
 
 class BookResource extends Resource
 {
@@ -23,6 +26,10 @@ class BookResource extends Resource
     protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedBookOpen;
 
     protected static ?string $recordTitleAttribute = 'title';
+
+    protected static ?int $navigationSort = 1;
+
+    protected static ?SubNavigationPosition $subNavigationPosition = SubNavigationPosition::End;
 
     public static function form(Schema $schema): Schema
     {
@@ -54,5 +61,13 @@ class BookResource extends Resource
             'view' => ViewBook::route('/{record}'),
             'edit' => EditBook::route('/{record}/edit'),
         ];
+    }
+
+    public static function getRecordSubNavigation(Page $page): array
+    {
+        return $page->generateNavigationItems([
+            EditBook::class,
+            ViewBook::class,
+        ]);
     }
 }

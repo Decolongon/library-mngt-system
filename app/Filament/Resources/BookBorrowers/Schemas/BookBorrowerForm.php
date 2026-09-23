@@ -15,6 +15,8 @@ class BookBorrowerForm
                 Select::make('borrower_id')
                     ->relationship('borrower', 'name')
                     ->label('Borrower')
+                    ->searchable()
+                    ->preload()
                     ->required(),
 
                 Select::make('book_id')
@@ -25,8 +27,7 @@ class BookBorrowerForm
                     ->required(),
 
                 DatePicker::make('borrow_at')
-                    ->minDate(now())
-                    ->readonly()
+                    ->minDate(now()->startOfDay())
                     ->default(now())
                     ->prefix('Date borrowed: ')
                     ->native(false)
@@ -34,7 +35,7 @@ class BookBorrowerForm
                     ->required(),
 
                 DatePicker::make('return_at')
-                 ->minDate(now())
+                 ->minDate(now()->startOfDay())
                  ->prefix('Returns at: ')
                  ->native(false)
                 ->required()

@@ -16,6 +16,7 @@ class FilamentPanelMiddleware
     public function handle(Request $request, Closure $next): Response
     {
         abort_if(! $request->user()->hasAnyRole(['librarian', 'super_admin']), 403);
+
         return $next($request);
     }
 }

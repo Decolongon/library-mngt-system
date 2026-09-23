@@ -15,8 +15,8 @@ class ListBooks extends ListRecords
     {
         return [
             CreateAction::make()
-            ->label('Create Book')
-            ->icon(Heroicon::OutlinedPlusCircle),
+                ->label('Create Book')
+                ->icon(Heroicon::OutlinedPlusCircle),
         ];
     }
 }

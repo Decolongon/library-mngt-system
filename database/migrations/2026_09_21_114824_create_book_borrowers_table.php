@@ -1,6 +1,7 @@
 <?php
 
 use App\Models\Book;
+use App\Models\User;
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
@@ -14,7 +15,7 @@ return new class extends Migration
     {
         Schema::create('book_borrowers', function (Blueprint $table) {
             $table->id();
-            $table->foreignIdFor(App\Models\User::class,'borrower_id')->constrained()->cascadeOnDelete();
+            $table->foreignIdFor(User::class, 'borrower_id')->constrained()->cascadeOnDelete();
             $table->foreignIdFor(Book::class)->constrained()->cascadeOnDelete();
             $table->date('borrow_at')->nullable();
             $table->date('return_at')->nullable();

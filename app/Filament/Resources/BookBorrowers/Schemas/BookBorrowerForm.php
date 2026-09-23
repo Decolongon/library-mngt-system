@@ -35,11 +35,11 @@ class BookBorrowerForm
                     ->required(),
 
                 DatePicker::make('return_at')
-                 ->minDate(now()->startOfDay())
-                 ->prefix('Returns at: ')
-                 ->native(false)
-                ->required()
-                ->label('When you gonna return this book?'),
+                    ->minDate(now()->startOfDay())
+                    ->prefix('Returns at: ')
+                    ->native(false)
+                    ->required()
+                    ->label('When you gonna return this book?'),
             ]);
     }
 }

@@ -5,7 +5,6 @@ namespace Database\Seeders;
 use App\Models\User;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
-use Illuminate\Support\Facades\Hash;
 use Spatie\Permission\Models\Role;
 
 class DatabaseSeeder extends Seeder
@@ -25,28 +24,28 @@ class DatabaseSeeder extends Seeder
         // ]);
         $roleLibrarian = Role::create(['name' => 'librarian']);
         $bookBorrower = Role::create(['name' => 'book_borrower']);
-         $superAdmin = Role::create(['name' => 'super_admin']);
+        $superAdmin = Role::create(['name' => 'super_admin']);
 
-       $user1 = User::create([
+        $user1 = User::create([
             'email' => 'librarian@gmail.com',
             'name' => 'Librarian',
-            'password' => bcrypt('12345678')
+            'password' => bcrypt('12345678'),
         ]);
 
         $user1->assignRole($roleLibrarian);
 
-         $user2 = User::create([
+        $user2 = User::create([
             'email' => 'book_borrower@gmail.com',
             'name' => 'book_borrower',
-            'password' => bcrypt('12345678')
+            'password' => bcrypt('12345678'),
         ]);
 
         $user2->assignRole($bookBorrower);
 
-       $user3 = User::create([
+        $user3 = User::create([
             'name' => 'Super admin',
             'email' => 'superadmin@gmail.com',
-            'password' => bcrypt('12345678')
+            'password' => bcrypt('12345678'),
         ]);
 
         $user3->assignRole($superAdmin);

@@ -110,46 +110,69 @@ new class extends Component
         {{-- Stats --}}
         <div class="flex items-center gap-2 text-sm text-zinc-500 dark:text-zinc-400">
             <span>{{ __('Showing :count books', ['count' => $this->books->count()]) }}</span>
-            @if(filled($search))
+            @if (filled($search))
                 <span>·</span>
-                <flux:link wire:click="$set('search','')" class="cursor-pointer text-sm">{{ __('Clear search') }}</flux:link>
+                <flux:link
+                    wire:click="$set('search','')"
+                    class="cursor-pointer text-sm"
+                >{{ __('Clear search') }}</flux:link>
             @endif
-            <span class="ms-auto hidden sm:inline-flex items-center gap-1.5">
+            <span class="ms-auto hidden items-center gap-1.5 sm:inline-flex">
                 <span class="size-2 rounded-full bg-emerald-500"></span> {{ __('Available') }}
-                <span class="size-2 rounded-full bg-zinc-300 dark:bg-zinc-600 ms-2"></span> {{ __('Unavailable') }}
+                <span class="ms-2 size-2 rounded-full bg-zinc-300 dark:bg-zinc-600"></span> {{ __('Unavailable') }}
             </span>
         </div>
 
         {{-- Books Grid --}}
-        @if($this->books->isEmpty())
+        @if ($this->books->isEmpty())
             <div class="rounded-xl border border-dashed border-zinc-200 p-12 text-center dark:border-zinc-700">
                 <flux:icon.book-open class="mx-auto size-8 text-zinc-300 dark:text-zinc-600" />
                 <flux:heading class="mt-3">{{ __('No books found') }}</flux:heading>
                 <flux:text class="mt-1">{{ filled($search) ? __('Try adjusting your search.') : __('No books are available at the moment.') }}</flux:text>
-                @if(filled($search))
-                    <flux:button wire:click="$set('search','')" variant="ghost" size="sm" class="mt-4">{{ __('Clear search') }}</flux:button>
+                @if (filled($search))
+                    <flux:button
+                        wire:click="$set('search','')"
+                        variant="ghost"
+                        size="sm"
+                        class="mt-4"
+                    >{{ __('Clear search') }}</flux:button>
                 @endif
             </div>
         @else
             <div class="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-                @foreach($this->books as $book)
+                @foreach ($this->books as $book)
                     @php
                         $isBorrowed = in_array($book->id, $this->borrowedBookIds, true);
                         $isAvailable = (int) $book->available_copies > 0;
-                        $canBorrow = $isAvailable && !$isBorrowed;
+                        $canBorrow = $isAvailable && ! $isBorrowed;
                     @endphp
                     <div class="flex flex-col rounded-xl border bg-white p-5 shadow-sm dark:border-zinc-700 dark:bg-zinc-900">
                         <div class="flex-1 space-y-3">
                             <div class="flex items-start justify-between gap-3">
-                                <h3 class="line-clamp-2 text-[15px] font-semibold leading-tight text-zinc-900 dark:text-white" title="{{ $book->title }}">
+                                <h3
+                                    class="line-clamp-2 text-[15px] leading-tight font-semibold text-zinc-900 dark:text-white"
+                                    title="{{ $book->title }}"
+                                >
                                     {{ $book->title }}
                                 </h3>
-                                @if($isBorrowed)
-                                    <flux:badge color="green" size="sm" inset="top bottom">{{ __('Borrowed') }}</flux:badge>
-                                @elseif(!$isAvailable)
-                                    <flux:badge color="zinc" size="sm" inset="top bottom">{{ __('Out of stock') }}</flux:badge>
+                                @if ($isBorrowed)
+                                    <flux:badge
+                                        color="green"
+                                        size="sm"
+                                        inset="top bottom"
+                                    >{{ __('Borrowed') }}</flux:badge>
+                                @elseif (! $isAvailable)
+                                    <flux:badge
+                                        color="zinc"
+                                        size="sm"
+                                        inset="top bottom"
+                                    >{{ __('Out of stock') }}</flux:badge>
                                 @else
-                                    <flux:badge color="emerald" size="sm" inset="top bottom">{{ __('Available') }}</flux:badge>
+                                    <flux:badge
+                                        color="emerald"
+                                        size="sm"
+                                        inset="top bottom"
+                                    >{{ __('Available') }}</flux:badge>
                                 @endif
                             </div>
 
@@ -167,7 +190,7 @@ new class extends Component
                                 <span class="inline-flex items-center rounded-full bg-zinc-100 px-2.5 py-1 font-medium text-zinc-700 dark:bg-zinc-800 dark:text-zinc-300">
                                     {{ $book->available_copies }} / {{ $book->total_copies }} {{ __('copies') }}
                                 </span>
-                                @if($isAvailable)
+                                @if ($isAvailable)
                                     <span class="text-emerald-600 dark:text-emerald-400">{{ __('In stock') }}</span>
                                 @else
                                     <span class="text-zinc-400">{{ __('No copies left') }}</span>
@@ -176,10 +199,20 @@ new class extends Component
                         </div>
 
                         <div class="mt-4 border-t border-zinc-100 pt-4 dark:border-zinc-800">
-                            @if($isBorrowed)
-                                <flux:button variant="ghost" disabled icon="check" class="w-full">{{ __('Borrowed') }}</flux:button>
-                            @elseif(!$isAvailable)
-                                <flux:button variant="ghost" disabled icon="x-mark" class="w-full">{{ __('Unavailable') }}</flux:button>
+                            @if ($isBorrowed)
+                                <flux:button
+                                    variant="ghost"
+                                    disabled
+                                    icon="check"
+                                    class="w-full"
+                                >{{ __('Borrowed') }}</flux:button>
+                            @elseif (! $isAvailable)
+                                <flux:button
+                                    variant="ghost"
+                                    disabled
+                                    icon="x-mark"
+                                    class="w-full"
+                                >{{ __('Unavailable') }}</flux:button>
                             @else
                                 <flux:button
                                     wire:click="bookBorrow({{ $book->id }})"
@@ -189,8 +222,14 @@ new class extends Component
                                     icon="book-open"
                                     class="w-full cursor-pointer"
                                 >
-                                    <span wire:loading.remove wire:target="bookBorrow({{ $book->id }})">{{ __('Borrow') }}</span>
-                                    <span wire:loading wire:target="bookBorrow({{ $book->id }})">{{ __('Borrowing...') }}</span>
+                                    <span
+                                        wire:loading.remove
+                                        wire:target="bookBorrow({{ $book->id }})"
+                                    >{{ __('Borrow') }}</span>
+                                    <span
+                                        wire:loading
+                                        wire:target="bookBorrow({{ $book->id }})"
+                                    >{{ __('Borrowing...') }}</span>
                                 </flux:button>
                             @endif
                         </div>
@@ -200,20 +239,30 @@ new class extends Component
         @endif
 
         {{-- My Borrowed Books --}}
-        @if($this->myBorrows->isNotEmpty())
+        @if ($this->myBorrows->isNotEmpty())
             <div class="rounded-xl border border-zinc-200 bg-white dark:border-zinc-700 dark:bg-zinc-900">
                 <div class="border-b border-zinc-200 px-5 py-4 dark:border-zinc-700">
-                    <flux:heading>{{ __('My Borrowed Books') }} <span class="font-normal text-zinc-500">({{ $this->myBorrows->count() }})</span></flux:heading>
+                    <flux:heading
+                        >{{ __('My Borrowed Books') }}
+                        <span class="font-normal text-zinc-500">({{ $this->myBorrows->count() }})</span></flux:heading>
                     <flux:text size="sm" class="mt-1">{{ __('Books you have currently borrowed.') }}</flux:text>
                 </div>
                 <div class="divide-y divide-zinc-100 dark:divide-zinc-800">
-                    @foreach($this->myBorrows as $borrow)
+                    @foreach ($this->myBorrows as $borrow)
                         <div class="flex items-center justify-between gap-4 px-5 py-3 text-sm">
                             <div class="min-w-0">
-                                <p class="truncate font-medium text-zinc-900 dark:text-white">{{ $borrow->book->title ?? __('Unknown book') }}</p>
-                                <p class="truncate text-xs text-zinc-500">{{ $borrow->book->author ?? '' }} @if($borrow->borrow_at) · {{ __('Borrowed on :date', ['date' => $borrow->borrow_at->format('M d, Y')]) }} @endif</p>
+                                <p class="truncate font-medium text-zinc-900 dark:text-white">
+                                    {{ $borrow->book->title ?? __('Unknown book') }}
+                                </p>
+                                <p class="truncate text-xs text-zinc-500">
+                                    {{ $borrow->book->author ?? '' }}
+                                    @if ($borrow->borrow_at) ·{{ __('Borrowed on :date', ['date' => $borrow->borrow_at->format('M d, Y')]) }} @endif
+                                </p>
                             </div>
-                            <flux:badge size="sm" color="zinc">{{ $borrow->return_at ? __('Returned') : __('Active') }}</flux:badge>
+                            <flux:badge
+                                size="sm"
+                                color="zinc"
+                            >{{ $borrow->return_at ? __('Returned') : __('Active') }}</flux:badge>
                         </div>
                     @endforeach
                 </div>

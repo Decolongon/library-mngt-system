@@ -15,8 +15,8 @@ class ListBookBorrowers extends ListRecords
     {
         return [
             CreateAction::make()
-             ->label('Create Book Borrower')
-             ->icon(Heroicon::OutlinedPlusCircle),
+                ->label('Create Book Borrower')
+                ->icon(Heroicon::OutlinedPlusCircle),
         ];
     }
 }

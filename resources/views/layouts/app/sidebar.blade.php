@@ -32,7 +32,7 @@
                 >
                     {{ __('Books') }}
                 </flux:sidebar.item>
-                 <flux:sidebar.item
+                <flux:sidebar.item
                     icon="book-open"
                     :href="route('my-borrowed-book')"
                     :current="request()->routeIs('my-borrowed-book')"

@@ -38,12 +38,12 @@ class BookForm
                 ->minValue(1)
                 ->live(onBlur: true)
                 ->required(),
-            
-             TextInput::make('available_copies')
+
+            TextInput::make('available_copies')
                 ->label('How many Copies you want to be borrowed?')
                 ->numeric()
                 ->minValue(1)
-                ->maxValue(fn($get) => intval($get('total_copies')))
+                ->maxValue(fn ($get) => intval($get('total_copies')))
                 ->required(),
         ];
     }

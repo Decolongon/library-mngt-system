@@ -88,11 +88,11 @@ class FortifyServiceProvider extends ServiceProvider
             public function toResponse($request)
             {
                 if ($request->user()->hasAnyRole(['librarian', 'super_admin'])) {
-                    return redirect()->intended(route('filament.admin.pages.dashboard'));
+                    return redirect()->route('filament.admin.pages.dashboard');
                 }
 
                 if ($request->user()->hasRole('book_borrower')) {
-                    return redirect()->intended(route('dashboard'));
+                    return redirect()->route('dashboard');
                 }
 
                 return redirect()->route('login');

@@ -79,7 +79,7 @@ new class extends Component
 
         // bust computed cache so UI updates immediately
         unset($this->books, $this->borrowedBookIds);
-        $this->dispatch('book-borrowed')->to(component: 'borrowed-book');
+        $this->dispatch('book-borrowed');
     }
 };
 ?>
@@ -141,7 +141,7 @@ new class extends Component
                         $isAvailable = (int) $book->available_copies > 0;
                         $canBorrow = $isAvailable && ! $isBorrowed;
                     @endphp
-                    <div class="flex flex-col rounded-xl border bg-white p-5 shadow-sm dark:border-zinc-700 dark:bg-zinc-900">
+                    <div class="flex flex-col rounded-xl border bg-white p-5 shadow-sm dark:border-zinc-700 dark:bg-zinc-900" wire:key="book-{{ $book->id }}">
                         <div class="flex-1 space-y-3">
                             <div class="flex items-start justify-between gap-3">
                                 <h3

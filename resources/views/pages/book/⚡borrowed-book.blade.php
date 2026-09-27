@@ -1,5 +1,6 @@
 <?php
 
+use App\Models\BookBorrower;
 use Illuminate\Support\Facades\Auth;
 use Livewire\Attributes\Computed;
 use Livewire\Attributes\On;
@@ -18,6 +19,25 @@ new class extends Component
     {
         unset($this->myBorrowedBooks);
     }
+
+    public function toReturn(BookBorrower $bookBorrower)
+    {
+        abort_if($bookBorrower->borrower_id !== Auth::id(), 403);
+
+        $bookBorrower->load('book');
+
+        if ($bookBorrower->return_at) {
+            return;
+        }
+
+        $bookBorrower->update(['return_at' => now()]);
+
+        if ($bookBorrower->book) {
+            $bookBorrower->book()->increment('available_copies');
+        }
+
+        $this->resetMyborrowedBooks();
+    }
 };
 ?>
 
@@ -31,7 +51,7 @@ new class extends Component
                 </div>
                 <div class="divide-y divide-zinc-100 dark:divide-zinc-800">
                     @foreach ($this->myBorrowedBooks as $borrow)
-                        <div class="flex items-center justify-between gap-4 px-5 py-3 text-sm">
+                        <div class="flex items-center justify-between gap-4 px-5 py-3 text-sm" wire:key="borrow-{{ $borrow->id }}">
                             <div class="min-w-0">
                                 <p class="truncate font-medium text-zinc-900 dark:text-white">
                                     {{ $borrow->book->title ?? __('Unknown book') }}
@@ -42,6 +62,8 @@ new class extends Component
                                 </p>
                             </div>
                             <flux:badge
+                                wire:click="toReturn({{ $borrow->id }})"
+                                wire:confirm="{{ __('Are you sure you want to return this book?') }}"
                                 size="sm"
                                 color="zinc"
                             >{{ $borrow->return_at ? __('Returned') : __('Active') }}</flux:badge>

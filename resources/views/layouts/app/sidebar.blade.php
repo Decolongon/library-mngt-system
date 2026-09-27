@@ -32,6 +32,14 @@
                 >
                     {{ __('Books') }}
                 </flux:sidebar.item>
+                 <flux:sidebar.item
+                    icon="book-open"
+                    :href="route('my-borrowed-book')"
+                    :current="request()->routeIs('my-borrowed-book')"
+                    wire:navigate
+                >
+                    {{ __('My Books') }}
+                </flux:sidebar.item>
             </flux:sidebar.group>
         </flux:sidebar.nav>
 

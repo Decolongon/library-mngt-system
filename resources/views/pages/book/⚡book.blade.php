@@ -38,12 +38,6 @@ new class extends Component
         return Auth::user()->bookBorrows()->pluck('book_id')->all();
     }
 
-    #[Computed]
-    public function myBorrows()
-    {
-        return Auth::user()->bookBorrows()->with('book:id,title,author')->latest()->get();
-    }
-
     public function bookBorrow(Book $book): void
     {
         Gate::authorize('create', BookBorrower::class);
@@ -84,7 +78,8 @@ new class extends Component
         }
 
         // bust computed cache so UI updates immediately
-        unset($this->books, $this->borrowedBookIds, $this->myBorrows);
+        unset($this->books, $this->borrowedBookIds);
+        $this->dispatch('book-borrowed')->to(component: 'borrowed-book');
     }
 };
 ?>
@@ -235,37 +230,6 @@ new class extends Component
                         </div>
                     </div>
                 @endforeach
-            </div>
-        @endif
-
-        {{-- My Borrowed Books --}}
-        @if ($this->myBorrows->isNotEmpty())
-            <div class="rounded-xl border border-zinc-200 bg-white dark:border-zinc-700 dark:bg-zinc-900">
-                <div class="border-b border-zinc-200 px-5 py-4 dark:border-zinc-700">
-                    <flux:heading
-                        >{{ __('My Borrowed Books') }}
-                        <span class="font-normal text-zinc-500">({{ $this->myBorrows->count() }})</span></flux:heading>
-                    <flux:text size="sm" class="mt-1">{{ __('Books you have currently borrowed.') }}</flux:text>
-                </div>
-                <div class="divide-y divide-zinc-100 dark:divide-zinc-800">
-                    @foreach ($this->myBorrows as $borrow)
-                        <div class="flex items-center justify-between gap-4 px-5 py-3 text-sm">
-                            <div class="min-w-0">
-                                <p class="truncate font-medium text-zinc-900 dark:text-white">
-                                    {{ $borrow->book->title ?? __('Unknown book') }}
-                                </p>
-                                <p class="truncate text-xs text-zinc-500">
-                                    {{ $borrow->book->author ?? '' }}
-                                    @if ($borrow->borrow_at) ·{{ __('Borrowed on :date', ['date' => $borrow->borrow_at->format('M d, Y')]) }} @endif
-                                </p>
-                            </div>
-                            <flux:badge
-                                size="sm"
-                                color="zinc"
-                            >{{ $borrow->return_at ? __('Returned') : __('Active') }}</flux:badge>
-                        </div>
-                    @endforeach
-                </div>
             </div>
         @endif
     </div>

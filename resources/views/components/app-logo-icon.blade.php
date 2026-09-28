@@ -1,8 +1,18 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 40 42" {{ $attributes }}>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32" {{ $attributes }}>
+    {{-- Library mark: open book with bookmark — uses currentColor so visible in both light/dark wrappers (bg-zinc-900 text-white / dark:bg-white dark:text-zinc-900) --}}
+    {{-- Book outline --}}
     <path
-        fill="currentColor"
-        fill-rule="evenodd"
-        clip-rule="evenodd"
-        d="M17.2 5.633 8.6.855 0 5.633v26.51l16.2 9 16.2-9v-8.442l7.6-4.223V9.856l-8.6-4.777-8.6 4.777V18.3l-5.6 3.111V5.633ZM38 18.301l-5.6 3.11v-6.157l5.6-3.11V18.3Zm-1.06-7.856-5.54 3.078-5.54-3.079 5.54-3.078 5.54 3.079ZM24.8 18.3v-6.157l5.6 3.111v6.158L24.8 18.3Zm-1 1.732 5.54 3.078-13.14 7.302-5.54-3.078 13.14-7.3v-.002Zm-16.2 7.89 7.6 4.222V38.3L2 30.966V7.92l5.6 3.111v16.892ZM8.6 9.3 3.06 6.222 8.6 3.143l5.54 3.08L8.6 9.3Zm21.8 15.51-13.2 7.334V38.3l13.2-7.334v-6.156ZM9.6 11.034l5.6-3.11v14.6l-5.6 3.11v-14.6Z"
+        fill="none"
+        stroke="currentColor"
+        stroke-width="2.1"
+        stroke-linecap="round"
+        stroke-linejoin="round"
+        d="M5.8 8.2c1.5-.55 3.2-.85 5-.85 2.6 0 4.7 1 5.2 1.35.5-.35 2.6-1.35 5.2-1.35 1.8 0 3.5.3 5 .85v13.9c-1.5-.55-3.2-.85-5-.85-1.9 0-3.5.5-5.2 1.35-1.7-.85-3.3-1.35-5.2-1.35-1.8 0-3.5.3-5 .85z"
     />
+    {{-- Spine --}}
+    <path fill="none" stroke="currentColor" stroke-width="2.1" stroke-linecap="round" d="M16 8.7v13.9" />
+    {{-- Pages detail lines --}}
+    <path fill="none" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" opacity="0.55" d="M9.5 11.2h3.2M9.5 13.7h3.2M19.3 11.2h3.2M19.3 13.7h3.2" />
+    {{-- Bookmark ribbon on right page — solid currentColor for contrast --}}
+    <path fill="currentColor" d="M19.8 8.8h3.6v6.2l-1.8-1.5-1.8 1.5z" />
 </svg>

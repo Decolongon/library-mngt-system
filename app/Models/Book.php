@@ -4,13 +4,19 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Attributes\Fillable;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 
-#[Fillable(['title', 'author', 'isbn', 'total_copies', 'available_copies'])]
+#[Fillable(['title', 'author', 'isbn', 'total_copies', 'available_copies','category_id'])]
 class Book extends Model
 {
     public function borrowers(): HasMany
     {
         return $this->hasMany(BookBorrower::class);
+    }
+
+    public function category(): BelongsTo
+    {
+        return $this->belongsTo(Category::class);
     }
 }

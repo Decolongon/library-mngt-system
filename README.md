@@ -56,17 +56,6 @@ Regenerate with `php artisan shield:generate`; grant super admin with `php artis
 | `GET /dashboard`, `/books`, `/my-borrowed-book` | `book_borrower` |
 | `/admin/books`, `/admin/categories`, `/admin/book-borrowers`, `/admin/shield/roles` | staff |
 
-## Data model
-
-```
-Category 1 ──── * Book 1 ──── * BookBorrower * ──── 1 User
-```
-
-- `Category` — `name`, `slug`
-- `Book` — `category_id`, `title`, `author`, `isbn` (unique), `total_copies`, `available_copies`
-- `BookBorrower` — `book_id`, `borrower_id`, `borrow_at`, `return_at`, unique(`borrower_id`, `book_id`)
-
-Borrowing decrements `available_copies`; returning increments it and stamps `return_at`. Double-borrowing is blocked both in the component and by the unique index.
 
 ## License
 

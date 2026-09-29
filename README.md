@@ -68,40 +68,6 @@ Category 1 ──── * Book 1 ──── * BookBorrower * ──── 1 Us
 
 Borrowing decrements `available_copies`; returning increments it and stamps `return_at`. Double-borrowing is blocked both in the component and by the unique index.
 
-## Project layout
-
-```
-app/Filament/Resources/   Books, BookBorrowers, Categories (Filament CRUD)
-app/Policies/             Shield-generated policies
-resources/views/pages/
-  book/                   ⚡ catalogue + borrowed-book Livewire components
-  settings/               ⚡ profile, security, appearance
-  auth/                   Fortify auth screens
-```
-
-`⚡` marks Livewire 4 single-file components; the filename maps to the component name (`pages/book/⚡book.blade.php` → `pages::book.book`). Borrow/return logic lives inside these components, not in service classes.
-
-## Quality tooling
-
-```bash
-composer run lint          # pint
-composer run lint:check    # pint --test
-composer run types:check   # phpstan level 7
-composer run test          # config:clear + lint:check + types:check + pest
-composer run ci:check      # full suite
-```
-
-## Known gaps
-
-1. **Registration creates a role-less user.** `app/Actions/Fortify/CreateNewUser.php` assigns no role, so self-registered users cannot reach `/books`. Assign `book_borrower` there or manually.
-2. **No domain factories or seed data** — no `BookFactory`, `CategoryFactory`, or `BookBorrowerFactory` exists.
-3. **No tests for the domain.** The 12 Pest files cover only the inherited auth surface; `Book`, `BookBorrower`, `Category`, Filament resources, and borrow/return flows are untested.
-4. **Book view page renders empty** — `Books/Schemas/BookInfolist.php` has an empty `components()` array.
-5. **Categories are only creatable from the Book form** — standalone create/edit page registrations are commented out in `CategoryResource.php`.
-6. **`MustVerifyEmail` is commented out** on `User` even though the `verified` middleware is applied.
-7. **Branding is unconfigured** — `APP_NAME` is still `Laravel` and `AdminPanelProvider` sets no `brandName()`.
-8. **`composer.json`** is still named `laravel/livewire-starter-kit`.
-
 ## License
 
 MIT.

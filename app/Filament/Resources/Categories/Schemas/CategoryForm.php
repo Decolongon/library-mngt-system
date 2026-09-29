@@ -14,11 +14,13 @@ class CategoryForm
             ->components([
                 TextInput::make('name')
                     ->live(onBlur: true)
+                    ->unique(ignoreRecord: true)
                     ->afterStateUpdated(fn ($state, $set) => $set('slug', Str::slug($state)))
                     ->required(),
 
                 TextInput::make('slug')
                     ->dehydrated()
+                    ->unique(ignoreRecord: true)
                     ->disabled()
                     ->required(),
             ]);

@@ -2,8 +2,10 @@
 
 namespace App\Filament\Resources\Books\Schemas;
 
+use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TextInput;
 use Filament\Schemas\Schema;
+use Illuminate\Support\Str;
 
 class BookForm
 {
@@ -18,6 +20,26 @@ class BookForm
     protected static function bookForm(): array
     {
         return [
+            Select::make('category_id')
+                ->relationship(name: 'category', titleAttribute: 'name')
+                ->preload()
+                ->searchable()
+                ->createOptionForm([
+                    TextInput::make('name')
+                        ->live(onBlur: true)
+                        ->unique(ignoreRecord: true)
+                        ->afterStateUpdated(fn ($state, $set) => $set('slug', Str::slug($state)))
+                        ->required(),
+
+                    TextInput::make('slug')
+                        ->dehydrated()
+                        ->unique(ignoreRecord: true)
+                        ->disabled()
+                        ->required(),
+                ])
+                ->loadingMessage('Loading categories...')
+                ->required(),
+
             TextInput::make('title')
                 ->label('Book Title')
                 ->required(),

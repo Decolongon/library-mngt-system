@@ -23,6 +23,24 @@ use Illuminate\View\Middleware\ShareErrorsFromSession;
 
 class AdminPanelProvider extends PanelProvider
 {
+    /**
+     * The single source of truth for the application's color theme.
+     *
+     * Consumed by the Filament panel below, and by the app theme
+     * (see resources/css/app.css + resources/views/partials/head.blade.php),
+     * which exposes these palettes as semantic CSS color scales.
+     */
+    public static function colors(): array
+    {
+        return [
+            'primary' => Color::Green,
+            'warning' => Color::Orange,
+            'success' => Color::Emerald,
+            'danger' => Color::Rose,
+            'info' => Color::Blue,
+        ];
+    }
+
     public function panel(Panel $panel): Panel
     {
         return $panel
@@ -30,13 +48,7 @@ class AdminPanelProvider extends PanelProvider
             ->id('admin')
             ->path('admin')
             ->spa()
-            ->colors([
-                'primary' => Color::Green,
-                'warning' => Color::Orange,
-                'success' => Color::Emerald,
-                'danger' => Color::Rose,
-                'info' => Color::Blue,
-            ])
+            ->colors(static::colors())
             ->discoverResources(in: app_path('Filament/Resources'), for: 'App\Filament\Resources')
             ->discoverPages(in: app_path('Filament/Pages'), for: 'App\Filament\Pages')
             ->pages([

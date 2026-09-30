@@ -9,5 +9,15 @@
 
 @fonts
 
+<style>
+    :root {
+        @foreach (App\Providers\Filament\AdminPanelProvider::colors() as $role => $shades)
+            @foreach ($shades as $shade => $color)
+                --theme-{{ $role }}-{{ $shade }}: {{ $color }};
+            @endforeach
+        @endforeach
+    }
+</style>
+
 @vite(['resources/css/app.css', 'resources/js/app.js'])
 @fluxAppearance

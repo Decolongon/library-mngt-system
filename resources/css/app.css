@@ -23,16 +23,87 @@
     --color-zinc-900: #171717;
     --color-zinc-950: #0a0a0a;
 
-    --color-accent: var(--color-neutral-800);
-    --color-accent-content: var(--color-neutral-800);
+    /* Flux's accent is the app-wide primary color. */
+    --color-accent: var(--theme-primary-600);
+    --color-accent-content: var(--theme-primary-600);
     --color-accent-foreground: var(--color-white);
+}
+
+/*
+ * Semantic color scales, sourced at runtime from
+ * App\Providers\Filament\AdminPanelProvider::colors().
+ *
+ * Declared `static` so Tailwind always emits them rather than
+ * tree-shaking them until a utility happens to reference one.
+ */
+@theme static {
+    --color-primary-50: var(--theme-primary-50);
+    --color-primary-100: var(--theme-primary-100);
+    --color-primary-200: var(--theme-primary-200);
+    --color-primary-300: var(--theme-primary-300);
+    --color-primary-400: var(--theme-primary-400);
+    --color-primary-500: var(--theme-primary-500);
+    --color-primary-600: var(--theme-primary-600);
+    --color-primary-700: var(--theme-primary-700);
+    --color-primary-800: var(--theme-primary-800);
+    --color-primary-900: var(--theme-primary-900);
+    --color-primary-950: var(--theme-primary-950);
+
+    --color-success-50: var(--theme-success-50);
+    --color-success-100: var(--theme-success-100);
+    --color-success-200: var(--theme-success-200);
+    --color-success-300: var(--theme-success-300);
+    --color-success-400: var(--theme-success-400);
+    --color-success-500: var(--theme-success-500);
+    --color-success-600: var(--theme-success-600);
+    --color-success-700: var(--theme-success-700);
+    --color-success-800: var(--theme-success-800);
+    --color-success-900: var(--theme-success-900);
+    --color-success-950: var(--theme-success-950);
+
+    --color-warning-50: var(--theme-warning-50);
+    --color-warning-100: var(--theme-warning-100);
+    --color-warning-200: var(--theme-warning-200);
+    --color-warning-300: var(--theme-warning-300);
+    --color-warning-400: var(--theme-warning-400);
+    --color-warning-500: var(--theme-warning-500);
+    --color-warning-600: var(--theme-warning-600);
+    --color-warning-700: var(--theme-warning-700);
+    --color-warning-800: var(--theme-warning-800);
+    --color-warning-900: var(--theme-warning-900);
+    --color-warning-950: var(--theme-warning-950);
+
+    --color-danger-50: var(--theme-danger-50);
+    --color-danger-100: var(--theme-danger-100);
+    --color-danger-200: var(--theme-danger-200);
+    --color-danger-300: var(--theme-danger-300);
+    --color-danger-400: var(--theme-danger-400);
+    --color-danger-500: var(--theme-danger-500);
+    --color-danger-600: var(--theme-danger-600);
+    --color-danger-700: var(--theme-danger-700);
+    --color-danger-800: var(--theme-danger-800);
+    --color-danger-900: var(--theme-danger-900);
+    --color-danger-950: var(--theme-danger-950);
+
+    --color-info-50: var(--theme-info-50);
+    --color-info-100: var(--theme-info-100);
+    --color-info-200: var(--theme-info-200);
+    --color-info-300: var(--theme-info-300);
+    --color-info-400: var(--theme-info-400);
+    --color-info-500: var(--theme-info-500);
+    --color-info-600: var(--theme-info-600);
+    --color-info-700: var(--theme-info-700);
+    --color-info-800: var(--theme-info-800);
+    --color-info-900: var(--theme-info-900);
+    --color-info-950: var(--theme-info-950);
 }
 
 @layer theme {
     .dark {
-        --color-accent: var(--color-white);
-        --color-accent-content: var(--color-white);
-        --color-accent-foreground: var(--color-neutral-800);
+        /* Lighter primary shade reads better against a dark surface. */
+        --color-accent: var(--theme-primary-400);
+        --color-accent-content: var(--theme-primary-400);
+        --color-accent-foreground: var(--color-zinc-900);
     }
 }
 

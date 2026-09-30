@@ -2,6 +2,7 @@
 
 use App\Models\Book;
 use App\Models\BookBorrower;
+use App\Models\Category;
 use Flux\Flux;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Gate;
@@ -12,11 +13,20 @@ new class extends Component
 {
     public string $search = '';
 
+    public string $filterByCategory = '';
+
+    public string $searchCategory = '';
+
     #[Computed]
     public function books()
     {
         return Book::query()
             ->select(['id', 'title', 'author', 'isbn', 'total_copies', 'available_copies'])
+            ->when(
+                filled($this->filterByCategory),
+                function ($query) {
+                    $query->where('category_id', $this->filterByCategory);
+                })
             ->when(
                 filled($this->search),
                 function ($query) {
@@ -36,6 +46,49 @@ new class extends Component
     public function borrowedBookIds(): array
     {
         return Auth::user()->bookBorrows()->pluck('book_id')->all();
+    }
+
+    #[Computed]
+    public function categories()
+    {
+        return Category::query()->when(
+            filled($this->searchCategory),
+            function ($query) {
+                $query->where('name', 'like', "%{$this->searchCategory}%");
+            }
+        )->orderBy('name')->get();
+    }
+
+    #[Computed]
+    public function selectedCategory(): ?Category
+    {
+        return filled($this->filterByCategory)
+            ? Category::find($this->filterByCategory)
+            : null;
+    }
+
+    public function selectCategory(string $categoryId): void
+    {
+        $this->filterByCategory = $categoryId;
+        $this->searchCategory = '';
+
+        unset($this->categories, $this->selectedCategory, $this->books);
+    }
+
+    public function clearSearch(): void
+    {
+        $this->search = '';
+
+        unset($this->books);
+    }
+
+    public function clearFilters(): void
+    {
+        $this->search = '';
+        $this->filterByCategory = '';
+        $this->searchCategory = '';
+
+        unset($this->books, $this->categories, $this->selectedCategory);
     }
 
     public function bookBorrow(Book $book): void
@@ -92,13 +145,88 @@ new class extends Component
                 <flux:heading size="xl">{{ __('Books') }}</flux:heading>
                 <flux:text class="mt-1">{{ __('Browse and borrow available books.') }}</flux:text>
             </div>
-            <div class="w-full sm:w-80">
-                <flux:input
-                    wire:model.live.debounce.300ms="search"
-                    placeholder="{{ __('Search by title, author or ISBN...') }}"
-                    icon="magnifying-glass"
-                    clearable
-                />
+            <div class="flex w-full flex-col gap-2 sm:w-auto sm:flex-row sm:items-center">
+                <div class="w-full sm:w-56">
+                    <div
+                        wire:key="category-filter"
+                        class="relative"
+                        x-data="{ open: false }"
+                        @keydown.escape.window="open = false"
+                        @click.outside="open = false"
+                    >
+                        <button
+                            type="button"
+                            class="flex h-10 w-full items-center justify-between gap-2 rounded-lg border border-zinc-200 border-b-zinc-300/80 bg-white px-3 text-sm leading-[1.375rem] text-zinc-700 shadow-xs dark:border-white/10 dark:bg-white/10 dark:text-zinc-300"
+                            @click="open = ! open; if (open) $nextTick(() => $refs.search?.focus())"
+                            :aria-expanded="open"
+                        >
+                            <span class="truncate">{{ $this->selectedCategory?->name ?? __('All categories') }}</span>
+                            <flux:icon.chevron-up-down micro class="text-zinc-400" />
+                        </button>
+
+                        <div
+                            x-show="open"
+                            style="display: none"
+                            class="absolute z-20 mt-1 w-full min-w-56 overflow-hidden rounded-lg border border-zinc-200 bg-white shadow-lg dark:border-white/10 dark:bg-zinc-900"
+                        >
+                            <div class="border-b border-zinc-200 p-2 dark:border-white/10">
+                                <flux:input
+                                    x-ref="search"
+                                    wire:model.live.debounce.300ms="searchCategory"
+                                    placeholder="{{ __('Search categories...') }}"
+                                    icon="magnifying-glass"
+                                    clearable
+                                />
+                            </div>
+
+                            <div class="max-h-60 overflow-y-auto p-1">
+                                <button
+                                    type="button"
+                                    wire:click="selectCategory('')"
+                                    @click="open = false"
+                                    class="flex w-full cursor-pointer items-center justify-between gap-2 rounded-md px-3 py-2 text-left text-sm hover:bg-zinc-100 dark:hover:bg-zinc-800"
+                                >
+                                    <span>{{ __('All categories') }}</span>
+                                    <flux:icon.check micro class="{{ filled($filterByCategory) == '' ? '' : 'hidden' }}" />
+                                </button>
+
+                                @foreach ($this->categories as $category)
+                                    <button
+                                        type="button"
+                                        wire:key="category-option-{{ $category->id }}"
+                                        wire:click="selectCategory('{{ $category->id }}')"
+                                        @click="open = false"
+                                        class="flex w-full cursor-pointer items-center justify-between gap-2 rounded-md px-3 py-2 text-left text-sm hover:bg-zinc-100 dark:hover:bg-zinc-800"
+                                    >
+                                        <span class="truncate">{{ $category->name }}</span>
+                                        <flux:icon.check
+                                            micro
+                                            class="{{ (string) $filterByCategory === (string) $category->id ? '' : 'hidden' }}"
+                                        />
+                                    </button>
+                                @endforeach
+
+                                @if ($this->categories->isEmpty())
+                                    <p wire:loading.remove class="px-3 py-6 text-center text-sm text-zinc-500" wire:target="searchCategory">
+                                        {{ __('No categories found') }}
+                                    </p>
+                                    <p wire:loading class="px-3 py-6 text-center text-sm text-zinc-500" wire:target="searchCategory">
+                                        {{ __('Loading...') }}
+                                    </p>
+                                @endif
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="w-full sm:w-80">
+                    <flux:input
+                        wire:model.live.debounce.300ms="search"
+                        placeholder="{{ __('Search by title, author or ISBN...') }}"
+                        icon="magnifying-glass"
+                        clearable
+                    />
+                </div>
             </div>
         </div>
 
@@ -108,9 +236,16 @@ new class extends Component
             @if (filled($search))
                 <span>·</span>
                 <flux:link
-                    wire:click="$set('search','')"
+                    wire:click="clearSearch"
                     class="cursor-pointer text-sm"
                 >{{ __('Clear search') }}</flux:link>
+            @endif
+            @if (filled($filterByCategory))
+                <span>·</span>
+                <flux:link
+                    wire:click="selectCategory('')"
+                    class="cursor-pointer text-sm"
+                >{{ __('Clear filter') }}</flux:link>
             @endif
             <span class="ms-auto hidden items-center gap-1.5 sm:inline-flex">
                 <span class="size-2 rounded-full bg-emerald-500"></span> {{ __('Available') }}
@@ -123,14 +258,14 @@ new class extends Component
             <div class="rounded-xl border border-dashed border-zinc-200 p-12 text-center dark:border-zinc-700">
                 <flux:icon.book-open class="mx-auto size-8 text-zinc-300 dark:text-zinc-600" />
                 <flux:heading class="mt-3">{{ __('No books found') }}</flux:heading>
-                <flux:text class="mt-1">{{ filled($search) ? __('Try adjusting your search.') : __('No books are available at the moment.') }}</flux:text>
-                @if (filled($search))
+                <flux:text class="mt-1">{{ (filled($search) || filled($filterByCategory)) ? __('Try adjusting your search.') : __('No books are available at the moment.') }}</flux:text>
+                @if (filled($search) || filled($filterByCategory))
                     <flux:button
-                        wire:click="$set('search','')"
+                        wire:click="clearFilters"
                         variant="ghost"
                         size="sm"
                         class="mt-4"
-                    >{{ __('Clear search') }}</flux:button>
+                    >{{ __('Clear filters') }}</flux:button>
                 @endif
             </div>
         @else

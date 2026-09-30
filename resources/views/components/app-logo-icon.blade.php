@@ -1,5 +1,5 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32" {{ $attributes }}>
-    {{-- Library mark: open book with bookmark — uses currentColor so visible in both light/dark wrappers (bg-zinc-900 text-white / dark:bg-white dark:text-zinc-900) --}}
+    {{-- Library mark: open book with bookmark — uses currentColor so it inherits contrast from whatever wrapper it is placed in (e.g. bg-[var(--color-accent)] text-[var(--color-accent-foreground)] on the welcome page) --}}
     {{-- Book outline --}}
     <path
         fill="none"

@@ -16,6 +16,11 @@ class BooksTable
     {
         return $table
             ->columns([
+                 TextColumn::make('category.name')
+                    ->formatStateUsing(fn (string $state): string => Str::title($state))
+                    ->badge()
+                    ->label('Category'),
+
                 TextColumn::make('title')
                     ->formatStateUsing(fn (string $state): string => Str::ucfirst($state))
                     ->label('Title'),

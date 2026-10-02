@@ -48,13 +48,6 @@ The seeder creates no books or categories — add them through the admin panel.
 
 Regenerate with `php artisan shield:generate`; grant super admin with `php artisan shield:super-admin`.
 
-## Routes
-
-| Path | Who |
-| --- | --- |
-| `GET /` | public landing page |
-| `GET /dashboard`, `/books`, `/my-borrowed-book` | `book_borrower` |
-| `/admin/books`, `/admin/categories`, `/admin/book-borrowers`, `/admin/shield/roles` | staff |
 
 
 ## License

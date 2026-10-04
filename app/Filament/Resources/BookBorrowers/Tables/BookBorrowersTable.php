@@ -37,6 +37,7 @@ class BookBorrowersTable
             ->filters([
                 //
             ])
+            ->deferLoading()
             ->recordActions([
                 ViewAction::make(),
                 EditAction::make(),

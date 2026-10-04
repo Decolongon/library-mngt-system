@@ -28,6 +28,7 @@ class CategoriesTable
                     ->sortable()
                     ->toggleable(isToggledHiddenByDefault: true),
             ])
+            ->deferLoading()
             ->filters([
                 //
             ])
